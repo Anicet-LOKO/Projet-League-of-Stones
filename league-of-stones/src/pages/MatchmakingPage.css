@@ -1,0 +1,86 @@
+/* pages/MatchmakingPage.css */
+.mm-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 120px 1rem 3rem;
+  min-height: 100vh;
+}
+
+.mm-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 5vw, 2.8rem);
+  color: #fff;
+  text-shadow: 2px 2px 14px rgba(0,0,0,0.9);
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.mm-requests-banner {
+  width: 100%;
+  max-width: 500px;
+  margin-bottom: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+.mm-request-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(201,146,42,0.2);
+  border: 1px solid rgba(201,146,42,0.5);
+  padding: 0.7rem 1.2rem;
+  border-radius: 8px;
+  gap: 1rem;
+}
+.mm-request-item span { font-size: 0.9rem; }
+
+.mm-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.8rem;
+  margin-bottom: 2rem;
+}
+.mm-actions .btn { min-width: 260px; }
+
+.mm-players-section {
+  text-align: center;
+  width: 100%;
+  max-width: 480px;
+}
+
+.mm-players-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.3rem, 3.5vw, 1.9rem);
+  color: #fff;
+  text-shadow: 2px 2px 10px rgba(0,0,0,0.8);
+  margin-bottom: 1rem;
+}
+
+.mm-players-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+.mm-player-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.4rem 0.5rem;
+  color: rgba(255,255,255,0.9);
+  font-size: 0.95rem;
+}
+
+.mm-empty {
+  color: rgba(255,255,255,0.6);
+  font-style: italic;
+  margin-bottom: 2rem;
+}
+
+.mm-launch { margin-top: 0.5rem; }

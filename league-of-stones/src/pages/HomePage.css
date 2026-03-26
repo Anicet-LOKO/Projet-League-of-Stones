@@ -1,0 +1,47 @@
+/* pages/HomePage.css */
+.home-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-top: 70px;
+}
+
+.home-hero {
+  text-align: center;
+  max-width: 700px;
+  padding: 2rem;
+}
+
+.home-hero-title {
+  font-family: 'Cinzel', serif;
+  font-weight: 700;
+  font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+  color: #fff;
+  text-shadow: 2px 2px 16px rgba(0,0,0,0.9);
+  margin-bottom: 1rem;
+  line-height: 1.25;
+}
+
+.home-hero-sub {
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.88);
+  text-shadow: 1px 1px 8px rgba(0,0,0,0.8);
+  margin-bottom: 2.2rem;
+  line-height: 1.5;
+}
+
+.home-hero-btns {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.home-hero-btns .btn {
+  min-width: 220px;
+}
+
+@media (max-width: 480px) {
+  .home-hero-title { font-size: 1.5rem; }
+}

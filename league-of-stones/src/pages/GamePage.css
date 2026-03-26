@@ -1,0 +1,198 @@
+/* pages/GamePage.css */
+
+/* ── Layout ── */
+.game-main {
+  flex: 1;
+  padding: 80px 1.5rem 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  max-width: 1100px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.game-title {
+  font-family: 'Cinzel', serif;
+  font-size: clamp(1.5rem, 4vw, 2.2rem);
+  text-align: center;
+  color: #fff;
+  text-shadow: 2px 2px 12px rgba(0,0,0,0.9);
+  margin-bottom: 0.4rem;
+}
+
+/* ── Message flottant ── */
+.game-message {
+  position: fixed; top: 76px; left: 50%; transform: translateX(-50%);
+  background: rgba(0,0,0,0.85); border: 1px solid var(--gold);
+  color: var(--gold-light); font-family: 'Cinzel', serif; font-size: 0.85rem;
+  padding: 0.5rem 1.5rem; border-radius: 999px; z-index: 200;
+  white-space: nowrap; pointer-events: none;
+  animation: msgFade 3s ease forwards;
+}
+@keyframes msgFade {
+  0%   { opacity:0; transform:translateX(-50%) translateY(-6px); }
+  15%  { opacity:1; transform:translateX(-50%) translateY(0); }
+  75%  { opacity:1; }
+  100% { opacity:0; }
+}
+
+/* ── Zone joueur ── */
+.game-zone {
+  padding: 0.8rem 1rem;
+  background: rgba(0,0,0,0.3);
+  border-radius: 6px;
+}
+
+.game-zone-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.gz-label {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.7);
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+.gz-hp {
+  font-family: 'Cinzel', serif;
+  font-size: 0.9rem;
+  color: #ff6b6b;
+}
+.gz-stones {
+  font-size: 0.82rem;
+  color: rgba(255,255,255,0.6);
+}
+
+/* ── Board ── */
+.game-board {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  min-height: 120px;
+  align-items: flex-end;
+  padding: 0.4rem 0;
+  position: relative;
+}
+
+/* ── Indicateur de tour ── */
+.game-turn-bar {
+  text-align: center;
+  padding: 0.4rem;
+  font-family: 'Cinzel', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.15em;
+  color: var(--gold-light);
+  text-shadow: 0 0 8px rgba(201,146,42,0.5);
+}
+
+/* ── Main du joueur ── */
+.game-hand {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 0.4rem 0;
+}
+
+/* ── Actions ── */
+.game-actions {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 0.6rem;
+}
+
+/* ── Interactivité cartes ── */
+.board-card { position: relative; }
+.board-card.attackable .game-card { cursor: pointer; }
+.board-card.attackable:hover .game-card {
+  border-color: var(--gold); box-shadow: 0 0 14px rgba(201,146,42,0.5);
+  transform: translateY(-4px);
+}
+.board-card.selected-attacker .game-card {
+  border-color: #f1c40f; box-shadow: 0 0 18px rgba(241,196,15,0.7);
+}
+.board-card.targetable .game-card { cursor: crosshair; }
+.board-card.targetable:hover .game-card {
+  border-color: #e74c3c; box-shadow: 0 0 14px rgba(231,76,60,0.5);
+  transform: translateY(3px);
+}
+.hand-card.playable .game-card { cursor: pointer; }
+.hand-card.playable:hover .game-card {
+  border-color: #2ecc71; box-shadow: 0 0 14px rgba(46,204,113,0.4);
+  transform: translateY(-5px);
+}
+
+.direct-attack-btn {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+}
+
+/* ── Deck selection ── */
+.deck-main {
+  flex: 1; padding: 80px 1.5rem 1rem;
+  max-width: 1100px; margin: 0 auto; width: 100%;
+}
+.deck-title {
+  font-family: 'Cinzel', serif; font-size: clamp(1.5rem,4vw,2.2rem);
+  text-align: center; color: #fff;
+  text-shadow: 2px 2px 12px rgba(0,0,0,0.9); margin-bottom: 0.3rem;
+}
+.deck-subtitle {
+  text-align: center; font-size: 0.9rem;
+  color: rgba(255,255,255,0.7); margin-bottom: 1.2rem; font-style: italic;
+}
+
+.deck-layout { display: flex; gap: 1.5rem; align-items: flex-start; }
+.deck-grid-wrap { flex: 1; }
+.deck-cards-grid {
+  display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 1.5rem;
+}
+.deck-card-item { cursor: pointer; opacity: 0.8; transition: opacity 0.15s, transform 0.15s; }
+.deck-card-item:hover { opacity: 1; transform: translateY(-3px); }
+.deck-card-item.selected { opacity: 1; }
+.deck-card-item.selected .game-card {
+  border-color: var(--gold); box-shadow: 0 0 10px rgba(201,146,42,0.6);
+}
+
+.deck-sidebar {
+  width: 200px; flex-shrink: 0;
+  background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 6px; padding: 1rem;
+  position: sticky; top: 90px;
+}
+.deck-sidebar h3 {
+  font-family: 'Cinzel', serif; font-size: 0.9rem;
+  color: var(--gold-light); margin-bottom: 0.8rem; text-align: center;
+}
+.deck-sidebar-list {
+  list-style: none; font-size: 0.78rem;
+  color: rgba(255,255,255,0.75); max-height: 300px;
+  overflow-y: auto; margin-bottom: 1rem;
+}
+.deck-sidebar-list li {
+  padding: 0.2rem 0; border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.deck-validate { width: 100%; }
+
+/* ── Fin de match ── */
+.finished-screen {
+  flex: 1; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1.5rem;
+  padding: 3rem; text-align: center;
+}
+.finished-title {
+  font-family: 'Cinzel', serif; font-size: 2.2rem;
+  color: var(--gold-light); text-shadow: 0 0 20px rgba(201,146,42,0.5);
+}
+.finished-status { font-size: 1.1rem; color: rgba(255,255,255,0.8); }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  .game-main { padding: 72px 0.5rem 0.5rem; }
+  .deck-layout { flex-direction: column; }
+  .deck-sidebar { width: 100%; position: static; }
+}

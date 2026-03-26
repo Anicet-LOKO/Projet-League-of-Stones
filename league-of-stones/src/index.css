@@ -1,0 +1,148 @@
+/* ============================================================
+   League of Stones — Global CSS (maquette dark fantasy castle)
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Open+Sans:wght@300;400;600&display=swap');
+
+:root {
+  --gold:         #c9922a;
+  --gold-light:   #e8b84b;
+  --gold-dark:    #8a5e10;
+  --white:        #ffffff;
+  --white-70:     rgba(255,255,255,0.7);
+  --white-50:     rgba(255,255,255,0.5);
+  --white-20:     rgba(255,255,255,0.2);
+  --white-10:     rgba(255,255,255,0.1);
+  --green-online: #4caf50;
+  --bg-castle:    url('https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1600&q=80&fit=crop');
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body, #root { height: 100%; font-family: 'Open Sans', sans-serif; color: #fff; background: #0d0d0d; }
+
+/* ── Fond castle partagé ── */
+.bg-castle {
+  position: fixed; inset: 0; z-index: 0;
+  background:
+    linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.55) 100%),
+    var(--bg-castle) center/cover no-repeat;
+  pointer-events: none;
+}
+
+.page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+
+/* ============================================================
+   NAVBAR
+   ============================================================ */
+.navbar {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0.7rem 2rem;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(3px);
+}
+
+.navbar-logo { text-decoration: none; line-height: 1; }
+.navbar-logo .logo-top {
+  font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.35rem;
+  color: var(--gold); text-shadow: 0 0 14px rgba(201,146,42,0.6); letter-spacing: 0.03em;
+}
+.navbar-logo .logo-of {
+  font-family: 'Cinzel', serif; font-size: 0.5rem;
+  color: var(--gold-light); letter-spacing: 0.4em; display: block; text-align: center;
+}
+.navbar-logo .logo-bot {
+  font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.35rem;
+  color: var(--gold); text-shadow: 0 0 14px rgba(201,146,42,0.6); letter-spacing: 0.03em;
+}
+
+.navbar-right { display: flex; align-items: center; gap: 2rem; }
+
+.navbar-links { display: flex; align-items: center; gap: 1.6rem; }
+.navbar-links a {
+  font-size: 0.88rem; color: #fff; text-decoration: none; font-weight: 400;
+  transition: color 0.2s;
+}
+.navbar-links a:hover { color: var(--gold-light); }
+
+.navbar-profile { display: flex; flex-direction: column; align-items: center; gap: 0.15rem; cursor: pointer; }
+.navbar-profile-top { display: flex; align-items: center; gap: 0.5rem; }
+.navbar-profile-icon {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1.5px solid var(--white-70);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--white-70);
+}
+.navbar-dot {
+  width: 11px; height: 11px; border-radius: 50%;
+  background: var(--green-online); box-shadow: 0 0 7px var(--green-online);
+}
+.navbar-since { font-size: 0.66rem; color: var(--white-70); white-space: nowrap; }
+
+/* ============================================================
+   BOUTONS pilules dorées
+   ============================================================ */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  padding: 0.65rem 2.2rem; border-radius: 999px;
+  font-family: 'Open Sans', sans-serif; font-size: 0.88rem; font-weight: 600;
+  cursor: pointer; border: none; transition: all 0.2s ease;
+  white-space: nowrap; text-decoration: none;
+}
+.btn-gold {
+  background: linear-gradient(180deg, #b07820 0%, #8a5e10 100%);
+  color: #fff; box-shadow: 0 3px 14px rgba(140,90,10,0.5);
+}
+.btn-gold:hover {
+  background: linear-gradient(180deg, #d09030 0%, #a87020 100%);
+  box-shadow: 0 5px 22px rgba(180,120,20,0.65); transform: translateY(-1px);
+}
+.btn-outline {
+  background: rgba(0,0,0,0.45); border: 1.5px solid var(--gold); color: #fff;
+}
+.btn-outline:hover { background: rgba(201,146,42,0.2); }
+.btn-lg { padding: 0.8rem 3rem; font-size: 1rem; }
+.btn-sm { padding: 0.38rem 1.2rem; font-size: 0.78rem; }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+
+/* ============================================================
+   INPUTS underline style (maquette)
+   ============================================================ */
+.field-row { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
+.field-row label { font-size: 0.92rem; color: #fff; min-width: 100px; padding-top: 0.35rem; }
+.field-row input {
+  flex: 1; min-width: 140px; background: transparent; border: none;
+  border-bottom: 1px solid var(--white-50);
+  padding: 0.35rem 0.2rem; color: #fff;
+  font-size: 0.9rem; font-family: 'Open Sans', sans-serif; outline: none;
+  transition: border-color 0.2s;
+}
+.field-row input::placeholder { color: var(--white-50); font-style: italic; }
+.field-row input:focus { border-bottom-color: var(--gold-light); }
+
+/* ============================================================
+   ALERTES
+   ============================================================ */
+.alert { padding: 0.55rem 1rem; border-radius: 6px; font-size: 0.85rem; margin-bottom: 1rem; }
+.alert-error   { background: rgba(200,50,50,0.3); border: 1px solid rgba(200,50,50,0.5); }
+.alert-success { background: rgba(50,200,80,0.3); border: 1px solid rgba(50,200,80,0.5); }
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+.loading-screen {
+  position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
+  font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--gold);
+  letter-spacing: 0.2em; z-index: 999; background: rgba(0,0,0,0.7);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 768px) {
+  .navbar { padding: 0.6rem 1rem; }
+  .navbar-links { gap: 1rem; }
+  .navbar-links a { font-size: 0.8rem; }
+}
+@media (max-width: 480px) { .navbar-links { display: none; } }

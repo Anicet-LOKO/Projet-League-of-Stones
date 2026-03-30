@@ -1,5 +1,4 @@
 // services/api.js
-// Toutes les routes du backend League of Stones
 import axios from 'axios'
 
 const BASE_URL = '/api'
@@ -8,9 +7,6 @@ const api = axios.create({
   baseURL: BASE_URL,
 })
 
-// Le backend autorise uniquement X-Requested-With dans CORS
-// Le token WWW-Authenticate est envoyé en query param pour contourner
-// En réalité on l'envoie quand même en header — le proxy Vite bypass le CORS
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token')
   if (token) {
@@ -34,41 +30,41 @@ export const unsubscribe = (email, password) =>
 
 // ─── MATCHMAKING ─────────────────────────────────────────────
 export const participate = () =>
-  api.post('/matchmaking/participate')
+  api.get('/matchmaking/participate')
 
 export const getAllPlayers = () =>
   api.get('/matchmaking/getAll')
 
 export const sendRequest = (matchmakingId) =>
-  api.post('/matchmaking/request', { matchmakingId })
+  api.get(`/matchmaking/request?matchmakingId=${matchmakingId}`)
 
 export const acceptRequest = (matchmakingId) =>
-  api.post('/matchmaking/acceptRequest', { matchmakingId })
+  api.get(`/matchmaking/acceptRequest?matchmakingId=${matchmakingId}`)
 
 // ─── MATCH ───────────────────────────────────────────────────
 export const getMatch = () =>
   api.get('/match/getMatch')
 
 export const initDeck = (deck) =>
-  api.post(`/match/initDeck?deck=${encodeURIComponent(JSON.stringify(deck))}`)
+  api.get(`/match/initDeck?deck=${encodeURIComponent(JSON.stringify(deck))}`)
 
 export const pickCard = () =>
-  api.post('/match/pickCard')
+  api.get('/match/pickCard')
 
 export const playCard = (cardKey) =>
-  api.post(`/match/playCard?card=${encodeURIComponent(cardKey)}`)
+  api.get(`/match/playCard?card=${encodeURIComponent(cardKey)}`)
 
 export const attack = (cardKey, enemyCardKey) =>
-  api.post(`/match/attack?card=${encodeURIComponent(cardKey)}&ennemyCard=${encodeURIComponent(enemyCardKey)}`)
+  api.get(`/match/attack?card=${encodeURIComponent(cardKey)}&ennemyCard=${encodeURIComponent(enemyCardKey)}`)
 
 export const attackPlayer = (cardKey) =>
-  api.post(`/match/attackPlayer?card=${encodeURIComponent(cardKey)}`)
+  api.get(`/match/attackPlayer?card=${encodeURIComponent(cardKey)}`)
 
 export const endTurn = () =>
-  api.post('/match/endTurn')
+  api.get('/match/endTurn')
 
 export const finishMatch = () =>
-  api.post('/match/finishMatch')
+  api.get('/match/finishMatch')
 
 // ─── CARTES ──────────────────────────────────────────────────
 export const getAllCards = () =>

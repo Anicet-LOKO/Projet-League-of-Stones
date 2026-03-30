@@ -19,22 +19,18 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-html, body, #root { height: 100%; font-family: 'Open Sans', sans-serif; color: #fff; background: #0d0d0d; }
+html, body, #root { min-height: 100%; font-family: 'Open Sans', sans-serif; color: #fff; background: #0d0d0d; }
 
-/* ── Fond castle partagé ── */
 .bg-castle {
-  position: fixed; inset: 0; z-index: 0;
+  position: fixed; inset: 0; z-index: -1;
   background:
     linear-gradient(to bottom, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0.55) 100%),
     var(--bg-castle) center/cover no-repeat;
   pointer-events: none;
 }
 
-.page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; }
+.page { position: relative; z-index: 1; min-height: 100vh; display: flex; flex-direction: column; overflow-y: auto; }
 
-/* ============================================================
-   NAVBAR
-   ============================================================ */
 .navbar {
   position: fixed; top: 0; left: 0; right: 0; z-index: 100;
   display: flex; align-items: center; justify-content: space-between;
@@ -80,9 +76,6 @@ html, body, #root { height: 100%; font-family: 'Open Sans', sans-serif; color: #
 }
 .navbar-since { font-size: 0.66rem; color: var(--white-70); white-space: nowrap; }
 
-/* ============================================================
-   BOUTONS pilules dorées
-   ============================================================ */
 .btn {
   display: inline-flex; align-items: center; justify-content: center;
   padding: 0.65rem 2.2rem; border-radius: 999px;
@@ -106,9 +99,6 @@ html, body, #root { height: 100%; font-family: 'Open Sans', sans-serif; color: #
 .btn-sm { padding: 0.38rem 1.2rem; font-size: 0.78rem; }
 .btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
 
-/* ============================================================
-   INPUTS underline style (maquette)
-   ============================================================ */
 .field-row { display: flex; align-items: flex-start; gap: 0.8rem; margin-bottom: 1.1rem; flex-wrap: wrap; }
 .field-row label { font-size: 0.92rem; color: #fff; min-width: 100px; padding-top: 0.35rem; }
 .field-row input {
@@ -121,25 +111,16 @@ html, body, #root { height: 100%; font-family: 'Open Sans', sans-serif; color: #
 .field-row input::placeholder { color: var(--white-50); font-style: italic; }
 .field-row input:focus { border-bottom-color: var(--gold-light); }
 
-/* ============================================================
-   ALERTES
-   ============================================================ */
 .alert { padding: 0.55rem 1rem; border-radius: 6px; font-size: 0.85rem; margin-bottom: 1rem; }
 .alert-error   { background: rgba(200,50,50,0.3); border: 1px solid rgba(200,50,50,0.5); }
 .alert-success { background: rgba(50,200,80,0.3); border: 1px solid rgba(50,200,80,0.5); }
 
-/* ============================================================
-   LOADING
-   ============================================================ */
 .loading-screen {
   position: fixed; inset: 0; display: flex; align-items: center; justify-content: center;
   font-family: 'Cinzel', serif; font-size: 1.2rem; color: var(--gold);
   letter-spacing: 0.2em; z-index: 999; background: rgba(0,0,0,0.7);
 }
 
-/* ============================================================
-   RESPONSIVE
-   ============================================================ */
 @media (max-width: 768px) {
   .navbar { padding: 0.6rem 1rem; }
   .navbar-links { gap: 1rem; }

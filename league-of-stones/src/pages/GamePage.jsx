@@ -10,23 +10,22 @@ import Navbar from '../components/Navbar'
 import CardComponent from '../components/CardComponent'
 import './GamePage.css'
 
-const POLL_INTERVAL = 4000 // 4 secondes
+const POLL_INTERVAL = 4000
 
 export default function GamePage() {
   const { user } = useAuth()
   const navigate = useNavigate()
   const [matchData, setMatchData] = useState(null)
   const [allCards, setAllCards] = useState([])
-  const [phase, setPhase] = useState('loading') // loading | deck | game | finished
+  const [phase, setPhase] = useState('loading')
   const [selectedDeck, setSelectedDeck] = useState([])
   const [selectedAttacker, setSelectedAttacker] = useState(null)
   const [error, setError] = useState('')
   const [message, setMessage] = useState('')
   const pollRef = useRef(null)
 
-  // Détermine quel joueur on est (player1 ou player2)
   const myKey = matchData
-    ? (matchData.player1?.id === user?.id ? 'player1' : 'player2')
+    ? (String(matchData.player1?.id) === String(user?.id) ? 'player1' : 'player2')
     : null
   const enemyKey = myKey === 'player1' ? 'player2' : 'player1'
   const me = matchData?.[myKey]
@@ -38,17 +37,18 @@ export default function GamePage() {
     setTimeout(() => setMessage(''), duration)
   }
 
-  // Récupérer l'état du match
   const fetchMatch = useCallback(async () => {
     try {
       const res = await getMatch()
-      const data = res.data.data
+      // Le backend renvoie directement sans wrapper { data: ... }
+      const data = res.data?.data || res.data
       setMatchData(data)
 
-      if (data.status === 'Deck is pending') {
+      const status = data?.status || ''
+      if (status.toLowerCase().includes('deck') && status.toLowerCase().includes('pending')) {
         setPhase('deck')
         clearInterval(pollRef.current)
-      } else if (data.player1?.turn === false && data.player2?.turn === false) {
+      } else if (data?.player1?.turn === false && data?.player2?.turn === false) {
         setPhase('finished')
         clearInterval(pollRef.current)
       } else {
@@ -59,30 +59,27 @@ export default function GamePage() {
     }
   }, [])
 
-  // Charger les cartes disponibles pour le deck
-  const fetchCards = async () => {
+  const fetchCards = useCallback(async () => {
     try {
       const res = await getAllCards()
-      setAllCards(res.data.data || [])
+      const cards = res.data?.data || res.data || []
+      setAllCards(Array.isArray(cards) ? cards : [])
     } catch (err) {
       setError('Impossible de récupérer les cartes')
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchMatch()
     fetchCards()
-  }, [fetchMatch])
+  }, [fetchMatch, fetchCards])
 
-  // Polling pendant le jeu
   useEffect(() => {
     if (phase === 'game') {
       pollRef.current = setInterval(fetchMatch, POLL_INTERVAL)
     }
     return () => clearInterval(pollRef.current)
   }, [phase, fetchMatch])
-
-  // ─── ACTIONS DECK ────────────────────────────────────────────────────────────
 
   const toggleCardInDeck = (card) => {
     if (selectedDeck.find((c) => c.key === card.key)) {
@@ -104,11 +101,10 @@ export default function GamePage() {
       showMessage('Deck validé ! En attente de l\'adversaire…')
       fetchMatch()
     } catch (err) {
-      setError(err.response?.data?.message || 'Erreur lors de la validation du deck')
+      const msg = typeof err.response?.data === 'string' ? err.response.data : 'Erreur deck'
+      setError(msg)
     }
   }
-
-  // ─── ACTIONS JEU ─────────────────────────────────────────────────────────────
 
   const handlePickCard = async () => {
     try {
@@ -116,7 +112,8 @@ export default function GamePage() {
       fetchMatch()
       showMessage('Carte piochée !')
     } catch (err) {
-      setError(err.response?.data?.message || 'Impossible de piocher')
+      const msg = typeof err.response?.data === 'string' ? err.response.data : 'Impossible de piocher'
+      setError(msg)
     }
   }
 
@@ -126,7 +123,8 @@ export default function GamePage() {
       fetchMatch()
       showMessage(`${cardKey} posé sur le plateau !`)
     } catch (err) {
-      setError(err.response?.data?.message || 'Impossible de jouer cette carte')
+      const msg = typeof err.response?.data === 'string' ? err.response.data : 'Impossible de jouer'
+      setError(msg)
     }
   }
 
@@ -135,7 +133,7 @@ export default function GamePage() {
     try {
       if (enemyCardKey === 'player') {
         await attackPlayer(selectedAttacker)
-        showMessage(`Attaque directe sur l'adversaire !`)
+        showMessage('Attaque directe sur l\'adversaire !')
       } else {
         await attack(selectedAttacker, enemyCardKey)
         showMessage(`${selectedAttacker} attaque ${enemyCardKey} !`)
@@ -143,7 +141,8 @@ export default function GamePage() {
       setSelectedAttacker(null)
       fetchMatch()
     } catch (err) {
-      setError(err.response?.data?.message || 'Attaque impossible')
+      const msg = typeof err.response?.data === 'string' ? err.response.data : 'Attaque impossible'
+      setError(msg)
     }
   }
 
@@ -154,25 +153,20 @@ export default function GamePage() {
       fetchMatch()
       showMessage('Tour terminé. À l\'adversaire de jouer…')
     } catch (err) {
-      setError(err.response?.data?.message || 'Impossible de terminer le tour')
+      const msg = typeof err.response?.data === 'string' ? err.response.data : 'Impossible de terminer'
+      setError(msg)
     }
   }
 
   const handleFinishMatch = async () => {
-    try {
-      await finishMatch()
-    } catch (_) {
-      // L'adversaire a peut-être déjà appelé finishMatch, c'est normal
-    } finally {
-      navigate('/')
-    }
+    try { await finishMatch() } catch (_) {}
+    finally { navigate('/') }
   }
-
-  // ─── RENDER PHASES ───────────────────────────────────────────────────────────
 
   if (phase === 'loading') {
     return (
       <div className="page">
+        <div className="bg-castle" />
         <Navbar />
         <div className="loading-screen">Chargement du match…</div>
       </div>
@@ -182,40 +176,40 @@ export default function GamePage() {
   if (phase === 'deck') {
     return (
       <div className="page">
+        <div className="bg-castle" />
         <Navbar />
         <main className="deck-main">
-          <h1 className="deck-title">Constituez votre deck</h1>
-          <p className="deck-subtitle">Sélectionnez jusqu'à 20 champions ({selectedDeck.length}/20 sélectionnés)</p>
-
+          <h1 className="deck-title">Sélection du deck</h1>
+          <p className="deck-subtitle">Choisissez jusqu'à 20 champions ({selectedDeck.length}/20)</p>
           {error && <div className="alert alert-error">{error}</div>}
           {message && <div className="alert alert-success">{message}</div>}
-
-          <div className="deck-selected-keys">
-            {selectedDeck.map((c) => (
-              <span key={c.key} className="deck-tag">{c.key}</span>
-            ))}
-          </div>
-
-          <div className="deck-cards-grid">
-            {allCards.map((card) => (
-              <div
-                key={card.key}
-                className={`deck-card-item ${selectedDeck.find((c) => c.key === card.key) ? 'selected' : ''}`}
-                onClick={() => toggleCardInDeck(card)}
-              >
-                <CardComponent card={card} small />
+          <div className="deck-layout">
+            <div className="deck-grid-wrap">
+              <div className="deck-cards-grid">
+                {allCards.map((card) => (
+                  <div
+                    key={card.key}
+                    className={`deck-card-item ${selectedDeck.find((c) => c.key === card.key) ? 'selected' : ''}`}
+                    onClick={() => toggleCardInDeck(card)}
+                  >
+                    <CardComponent card={card} small />
+                  </div>
+                ))}
               </div>
-            ))}
-          </div>
-
-          <div className="deck-actions">
-            <button
-              className="btn btn-primary"
-              onClick={handleInitDeck}
-              disabled={selectedDeck.length === 0}
-            >
-              ✓ Valider mon deck ({selectedDeck.length} cartes)
-            </button>
+            </div>
+            <div className="deck-sidebar">
+              <h3>Votre deck ({selectedDeck.length}/20)</h3>
+              <ul className="deck-sidebar-list">
+                {selectedDeck.map((c) => <li key={c.key}>{c.key}</li>)}
+              </ul>
+              <button
+                className="btn btn-gold deck-validate"
+                onClick={handleInitDeck}
+                disabled={selectedDeck.length === 0}
+              >
+                ✓ Valider
+              </button>
+            </div>
           </div>
         </main>
       </div>
@@ -223,14 +217,14 @@ export default function GamePage() {
   }
 
   if (phase === 'finished') {
-    const winner = matchData?.status || 'Partie terminée'
     return (
       <div className="page">
+        <div className="bg-castle" />
         <Navbar />
         <div className="finished-screen">
           <h1 className="finished-title">Partie terminée</h1>
-          <p className="finished-status">{winner}</p>
-          <button className="btn btn-primary" onClick={handleFinishMatch}>
+          <p className="finished-status">{matchData?.status || ''}</p>
+          <button className="btn btn-gold" onClick={handleFinishMatch}>
             Retour au menu
           </button>
         </div>
@@ -238,38 +232,35 @@ export default function GamePage() {
     )
   }
 
-  // ─── PHASE JEU ───────────────────────────────────────────────────────────────
   return (
     <div className="page">
+      <div className="bg-castle" />
       <Navbar />
       <main className="game-main">
+        <h1 className="game-title">Match</h1>
         {error && <div className="alert alert-error" onClick={() => setError('')}>{error} ✕</div>}
         {message && <div className="game-message">{message}</div>}
 
-        {/* Info adversaire */}
         <div className="player-zone enemy-zone">
-          <div className="player-info">
-            <span className="player-label">Adversaire</span>
-            <span className="player-hp">❤ {enemy?.hp ?? '?'} PV</span>
-            <span className="player-counts">
+          <div className="game-zone-header">
+            <span className="gz-label">Adversaire</span>
+            <span className="gz-hp">❤ {enemy?.hp ?? '?'} PV</span>
+            <span className="gz-stones">
               Main: {typeof enemy?.hand === 'number' ? enemy.hand : (enemy?.hand?.length ?? 0)} •
               Deck: {typeof enemy?.deck === 'number' ? enemy.deck : (enemy?.deck?.length ?? 0)}
             </span>
           </div>
-
-          {/* Board adverse */}
           <div className="board-label">Plateau adverse</div>
-          <div className="board">
-            {/* Attaque directe si board vide */}
+          <div className="game-board">
             {(enemy?.board?.length ?? 0) === 0 && isMyTurn && selectedAttacker && (
-              <button className="btn btn-danger direct-attack-btn" onClick={() => handleAttack('player')}>
+              <button className="btn btn-gold direct-attack-btn" onClick={() => handleAttack('player')}>
                 ⚔ Attaque directe !
               </button>
             )}
             {(enemy?.board || []).map((card) => (
               <div
                 key={card.key}
-                className={`board-card enemy ${selectedAttacker ? 'targetable' : ''}`}
+                className={`board-card ${selectedAttacker ? 'targetable' : ''}`}
                 onClick={() => selectedAttacker && handleAttack(card.key)}
               >
                 <CardComponent card={card} />
@@ -278,15 +269,17 @@ export default function GamePage() {
           </div>
         </div>
 
-        {/* Séparateur */}
-        <div className="turn-indicator">
+        <div className="game-turn-bar">
           {isMyTurn ? '⚔ C\'est votre tour !' : '⏳ Tour de l\'adversaire…'}
         </div>
 
-        {/* Info joueur */}
         <div className="player-zone my-zone">
+          <div className="game-zone-header">
+            <span className="gz-label">Vous — {user?.name}</span>
+            <span className="gz-hp">❤ {me?.hp ?? '?'} PV</span>
+          </div>
           <div className="board-label">Mon plateau</div>
-          <div className="board">
+          <div className="game-board">
             {(me?.board || []).map((card) => {
               const canAttack = isMyTurn && !card.attack && !card.newCard
               const isSelected = selectedAttacker === card.key
@@ -303,30 +296,19 @@ export default function GamePage() {
             })}
           </div>
 
-          {/* Main */}
           <div className="hand-section">
-            <div className="player-info">
-              <span className="player-label">Vous — {user?.name}</span>
-              <span className="player-hp">❤ {me?.hp} PV</span>
-            </div>
-
             {isMyTurn && (
-              <div className="turn-actions">
-                <button
-                  className="btn btn-sm"
-                  onClick={handlePickCard}
-                  disabled={me?.cardPicked}
-                >
+              <div className="game-actions">
+                <button className="btn btn-gold btn-sm" onClick={handlePickCard} disabled={me?.cardPicked}>
                   {me?.cardPicked ? 'Déjà pioché' : '🃏 Piocher'}
                 </button>
-                <button className="btn btn-sm btn-danger" onClick={handleEndTurn}>
+                <button className="btn btn-outline btn-sm" onClick={handleEndTurn}>
                   Fin du tour →
                 </button>
               </div>
             )}
-
             <div className="hand-label">Ma main ({(me?.hand || []).length} cartes)</div>
-            <div className="hand">
+            <div className="game-hand">
               {(me?.hand || []).map((card) => (
                 <div
                   key={card.key}

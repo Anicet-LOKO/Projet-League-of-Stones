@@ -11,7 +11,7 @@ export default function CardsPage() {
 
   useEffect(() => {
     getAllCards()
-      .then(res => setCards(res.data.data || []))
+      .then(res => setCards(res.data?.data || res.data || []))
       .catch(() => {})
       .finally(() => setLoading(false))
   }, [])

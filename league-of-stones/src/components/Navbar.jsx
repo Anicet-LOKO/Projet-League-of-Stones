@@ -2,6 +2,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useState, useEffect } from 'react'
+import logo from '../assets/logo.jpeg'
 
 export default function Navbar() {
   const { user, isLoggedIn } = useAuth()
@@ -27,9 +28,7 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo">
-        <span className="logo-top">LEAGUE</span>
-        <span className="logo-of">OF</span>
-        <span className="logo-bot">STONES</span>
+        <img src={logo} alt="League of Stones" style={{height: '55px', objectFit: 'contain'}} />
       </Link>
 
       {isLoggedIn && (

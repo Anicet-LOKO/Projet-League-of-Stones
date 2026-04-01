@@ -28,9 +28,10 @@ export default function Navbar() {
   return (
     <nav className="navbar">
       <Link to="/" className="navbar-logo">
-        <img src={logo} alt="League of Stones" style={{height: '55px', objectFit: 'contain'}} />
-      </Link>
-
+  <span className="logo-top">LEAGUE</span>
+  <span className="logo-of">OF</span>
+  <span className="logo-bot">STONES</span>
+</Link>
       {isLoggedIn && (
         <div className="navbar-right">
           <div className="navbar-links">
